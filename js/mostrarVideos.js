@@ -1,4 +1,5 @@
 import { conectaApi } from './conectaApi.js';
+import { myFunction } from './Filtro.js';
 
 const lista = document.querySelector("[data-lista]")
 
@@ -11,7 +12,7 @@ function constroiCard(titulo, descricao, url, imagem){
     allowfullscreen></iframe>
     <div class="descricao-video">
     <img src=${imagem} alt="logo canal alura">
-    <h3>${titulo}</h3>
+    <h3 id="titulo_card">${titulo}</h3>
     <p>${descricao}</p>
     </div>`
 
@@ -19,9 +20,17 @@ function constroiCard(titulo, descricao, url, imagem){
 }
 
 async function listaVideo(){
-    const listaApi = await conectaApi.listaVideos()
-    listaApi.forEach(elemento => lista.appendChild(
-        constroiCard(elemento.titulo, elemento.descricao, elemento.url, elemento.imagem)));
+    try {
+        const listaApi = await conectaApi.listaVideos();
+        listaApi.forEach(elemento => lista.appendChild(
+            constroiCard(elemento.titulo, elemento.descricao, elemento.url, elemento.imagem)))
+    } catch {
+        lista.innerHTML = `<h2 class="mensagem__titulo">Não foi possível carregar a lista de vídeos</h2>`
+    }
 }
 
 listaVideo()
+
+const inputPesquisar = document.getElementById('pesquisar')
+
+inputPesquisar.addEventListener('keyup' , myFunction)
